@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>音波驅蚊 - Ultrasound Repellent</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <!-- 頂部控制區 -->
+  <div class="top-controls">
+    <button id="settingsBtn" onclick="openSettings('language')">⚙ 設定</button>
+  </div>
+
+  <div class="container">
+    <header>
+      <h1 data-i18n="title">🦟 音波驅蚊</h1>
+      <p class="subtitle" data-i18n="subtitle">使用超聲波干擾蚊子活動</p>
+    </header>
+
+    <!-- 主要控制區 -->
+    <div class="control-section card">
+      <div class="status-indicator" id="statusIndicator">
+        <span class="dot"></span>
+        <span id="statusText">已停止</span>
+      </div>
+
+      <div class="frequency-display">
+        <p>當前頻率：<span id="currentFreq">17.5</span> kHz</p>
+        <p>波形：<span id="waveType">單頻</span></p>
+      </div>
+
+      <div class="main-controls">
+        <button id="startBtn" class="btn primary large">
+          <span class="icon">▶</span>
+          <span>開始驅蚊</span>
+        </button>
+        <button id="stopBtn" class="btn danger large" disabled>
+          <span class="icon">⏹</span>
+          <span>停止</span>
+        </button>
+      </div>
+
+      <p class="warning">
+        ⚠️ 請勿長時間使用，適時休息。效果因人而異，不保證 100% 驅蚊。
+      </p>
+    </div>
+
+    <!-- 情境快速設定 -->
+    <div class="preset-section card">
+      <h2>🎛️ 情境快速設定</h2>
+      <p class="preset-hint">依常見使用情境，一鍵套用建議的頻率與音量（可再微調）。</p>
+      <div class="preset-grid">
+        <button class="btn preset-btn" type="button" data-preset="indoor-basic">
+          <span class="preset-title">室內基本使用</span>
+          <span class="preset-desc">單頻 17.5 kHz · 音量 40%</span>
+        </button>
+        <button class="btn preset-btn" type="button" data-preset="multi-species">
+          <span class="preset-title">多種蚊子懷疑</span>
+          <span class="preset-desc">雙頻 16 / 19 kHz · 切換 1 秒 · 音量 50%</span>
+        </button>
+        <button class="btn preset-btn" type="button" data-preset="wide-area">
+          <span class="preset-title">大範圍覆蓋</span>
+          <span class="preset-desc">掃頻 15-22 kHz · 2 秒/次 · 音量 60%</span>
+        </button>
+        <button class="btn preset-btn" type="button" data-preset="night-bedroom">
+          <span class="preset-title">夜間臥室</span>
+          <span class="preset-desc">單頻 18 kHz · 音量 30%（較安靜）</span>
+        </button>
+        <button class="btn preset-btn" type="button" data-preset="outdoor-camping">
+          <span class="preset-title">戶外露營</span>
+          <span class="preset-desc">掃頻 16-20 kHz · 1 秒/次 · 音量 70%</span>
+        </button>
+      </div>
+      <p class="preset-note">僅供實驗與參考，實際效果仍依環境與蚊子種類而異。</p>
+    </div>
+
+  </div>
+
+  <!-- 設定與說明 Modal -->
+  <div class="modal-overlay" id="settingsModal" onclick="closeModal(event)">
+    <div class="modal" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeModalBtn()">✕</button>
+      <h2 data-i18n="settingsTitle">設定與說明</h2>
+
+      <div class="modal-nav">
+        <button class="modal-nav-btn active" data-section-target="language">語言</button>
+        <button class="modal-nav-btn" data-section-target="theme">佈景</button>
+        <button class="modal-nav-btn" data-section-target="help">說明</button>
+        <button class="modal-nav-btn" data-section-target="advanced">進階設定</button>
+      </div>
+
+      <!-- 語言分頁 -->
+      <div class="modal-section-group active" data-section="language">
+        <div class="modal-section">
+          <h3 data-i18n="languageSection">🌐 語言選擇</h3>
+          <div class="language-grid">
+            <button class="lang-btn" data-lang="zh-TW" onclick="setLanguage('zh-TW')">繁體中文</button>
+            <button class="lang-btn" data-lang="en-US" onclick="setLanguage('en-US')">English</button>
+            <button class="lang-btn" data-lang="ja-JP" onclick="setLanguage('ja-JP')">日本語</button>
+            <button class="lang-btn" data-lang="es-ES" onclick="setLanguage('es-ES')">Español</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 佈景分頁 -->
+      <div class="modal-section-group" data-section="theme">
+        <div class="modal-section">
+          <h3 data-i18n="themeSection">🌓 佈景模式</h3>
+          <div class="theme-display">
+            <div class="theme-icon" id="themeIcon">☀️</div>
+            <div class="theme-info">
+              <strong data-i18n="currentTheme">淺色模式</strong>
+              <span data-i18n="themeDesc">切換深色/淺色佈景以適應不同光線環境</span>
+            </div>
+            <button onclick="toggleTheme()" style="margin-left:auto;">
+              <span data-i18n="switchTheme">切換</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 說明分頁（關於＋步驟＋注意＋警告） -->
+      <div class="modal-section-group" data-section="help">
+        <div class="modal-section">
+          <h3 data-i18n="aboutSection">❓ 關於音波驅蚊</h3>
+          <p data-i18n="aboutText">本工具使用 Web Audio API 產生 15-22 kHz 的超聲波，據稱可以干擾蚊子的導航系統或 mating
+            behavior，達到驅蚊效果。這是完全在瀏覽器中執行的輕量級工具，無需安裝任何 App。</p>
+        </div>
+
+        <div class="modal-section">
+          <h3 data-i18n="howToSection">📖 使用步驟</h3>
+          <ul>
+            <li data-i18n="step1"><b>選擇模式</b>：單頻（固定頻率）、雙頻（交替切換）、掃頻（頻率範圍掃描）</li>
+            <li data-i18n="step2"><b>調整頻率參數</b>：根據模式設定目標頻率（15-22 kHz）和切換/掃描速度</li>
+            <li data-i18n="step3"><b>設定音量</b>：建議 30-50% 即可，過大可能造成不適</li>
+            <li data-i18n="step4"><b>開始驅蚊</b>：點擊 ▶ 開始，將裝置放置在蚊子活動區域</li>
+            <li data-i18n="step5"><b>停止</b>：點擊 ⏹ 停止，歷史記錄會自動保存</li>
+          </ul>
+        </div>
+
+        <div class="modal-section">
+          <h3 data-i18n="tipsSection">💡 注意事項</h3>
+          <p data-i18n="tipsText">效果不保證 100%，因蚊子品種、距離、障礙物而异。避免長時間使用，建議每 30 分鐘休息 10
+            分鐘。請勿在需要安靜的場所使用（圖書館、會議室等）。可搭配物理防蚊（蚊帳）和化學防蚊（防蚊液）使用，效果更佳。</p>
+        </div>
+
+        <div class="modal-section">
+          <h3 data-i18n="warningSection">⚠️ 安全警告</h3>
+          <p data-i18n="warningText">
+            孕婦、耳疾患者應謹慎使用。若出現頭暈、耳鳴、不適，請立即停止。青少年與年轻人可能聽到輕微高頻聲，若聽到尖銳聲請降低音量或停止。在公共場所使用前請確認當地法規，尊重他人，避免擾民。</p>
+        </div>
+
+        <!-- 狀態記錄（移入說明分頁） -->
+        <div class="modal-section">
+          <div class="history-section card">
+            <h2>📜 使用記錄</h2>
+            <div id="historyList" class="history-list"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 進階設定分頁 -->
+      <div class="modal-section-group" data-section="advanced">
+        <div class="modal-section">
+          <h3>🎚 進階頻率與音量設定</h3>
+          <p class="modal-subhint">平常建議直接使用「情境快速設定」，需要微調時再打開此區。</p>
+
+          <!-- 頻率選擇（移入彈出卡片） -->
+          <div class="settings-section card">
+            <h2>⚙️ 頻率設定</h2>
+            <div class="frequency-options">
+              <label class="radio-option">
+                <input type="radio" name="freqMode" value="single" checked>
+                <div class="radio-content">
+                  <span class="title">單頻模式</span>
+                  <span class="desc">固定頻率，適合多數蚊子</span>
+                  <input type="range" id="singleFreq" min="15" max="22" step="0.5" value="17.5" class="range-slider">
+                  <span class="value" id="singleFreqValue">17.5 kHz</span>
+                </div>
+              </label>
+
+              <label class="radio-option">
+                <input type="radio" name="freqMode" value="dual">
+                <div class="radio-content">
+                  <span class="title">雙頻模式</span>
+                  <span class="desc">交替切換，增加干擾</span>
+                  <div class="dual-inputs">
+                    <div class="input-group">
+                      <label>低頻：</label>
+                      <input type="number" id="dualFreq1" min="15" max="22" step="0.5" value="16">
+                      <span>kHz</span>
+                    </div>
+                    <div class="input-group">
+                      <label>高頻：</label>
+                      <input type="number" id="dualFreq2" min="15" max="22" step="0.5" value="19">
+                      <span>kHz</span>
+                    </div>
+                  </div>
+                  <div class="speed-control">
+                    <label>切換速度：</label>
+                    <input type="range" id="dualSpeed" min="100" max="2000" step="100" value="1000">
+                    <span class="value"><span id="dualSpeedValue">1.0</span> 秒</span>
+                  </div>
+                </div>
+              </label>
+
+              <label class="radio-option">
+                <input type="radio" name="freqMode" value="sweep">
+                <div class="radio-content">
+                  <span class="title">掃頻模式</span>
+                  <span class="desc">頻率來回掃描，廣泛覆蓋</span>
+                  <div class="sweep-inputs">
+                    <div class="input-group">
+                      <label>最低：</label>
+                      <input type="number" id="sweepLow" min="15" max="22" step="0.5" value="15">
+                      <span>kHz</span>
+                    </div>
+                    <div class="input-group">
+                      <label>最高：</label>
+                      <input type="number" id="sweepHigh" min="15" max="22" step="0.5" value="22">
+                      <span>kHz</span>
+                    </div>
+                    <div class="input-group">
+                      <label>速度：</label>
+                      <input type="range" id="sweepSpeed" min="0.5" max="5" step="0.5" value="2">
+                      <span class="value"><span id="sweepSpeedValue">2.0</span> 秒/次</span>
+                    </div>
+                  </div>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- 音量控制（移入彈出卡片） -->
+          <div class="volume-section card">
+            <h2>🔊 音量</h2>
+            <div class="volume-control">
+              <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.5" class="volume-slider">
+              <span class="volume-value" id="volumeValue">50%</span>
+            </div>
+            <p class="hint">音量不需要太大，中低音量即可。過大可能影響聽力。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
