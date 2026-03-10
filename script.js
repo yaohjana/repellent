@@ -6,7 +6,7 @@ const STORAGE_KEY = 'repellent_settings';
 // 多國語言字典
 const i18n = {
   'zh-TW': {
-    title: '🦟 音波驅蚊',
+    title: '🦟 音波驅蚊實驗室',
     subtitle: '使用超聲波干擾蚊子活動',
     settingsTitle: '設定與說明',
     languageSection: '🌐 語言選擇',
@@ -33,7 +33,7 @@ const i18n = {
     }
   },
   'en-US': {
-    title: '🦟 Ultrasound Mosquito Repellent',
+    title: '🦟 Ultrasound Mosquito Repellent Lab',
     subtitle: 'Use ultrasonic waves to interfere with mosquito activity',
     settingsTitle: 'Settings & Help',
     languageSection: '🌐 Language',
@@ -60,7 +60,7 @@ const i18n = {
     }
   },
   'ja-JP': {
-    title: '🦟 超音波蚊除け',
+    title: '🦟 超音波蚊除け実験室',
     subtitle: '超音波で蚊の活動を妨害します',
     settingsTitle: '設定と説明',
     languageSection: '🌐 言語選択',
@@ -87,7 +87,7 @@ const i18n = {
     }
   },
   'es-ES': {
-    title: '🦟 Repelente de Mosquitos por Ultrasonido',
+    title: '🦟 Laboratorio de Repelente de Mosquitos por Ultrasonido',
     subtitle: 'Usa ondas ultrasónicas para interferir en la actividad de los mosquitos',
     settingsTitle: 'Configuración y Ayuda',
     languageSection: '🌐 Idioma',
